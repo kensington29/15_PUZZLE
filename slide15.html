@@ -7,16 +7,17 @@
     <!-- デフォルトの挙動を解除するためのcss -->
     <link rel="stylesheet" href="css/reset.css">
     <!-- これは自分で作ったcssファイル -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style_15puzzle.css">
 </head>
 <body>
   <div id="site_box">
     <div id="sb_inner">
 
       <div id="header">
-        <div id="he_inner">
+        <div id="hd_inner">
 
           <h1>１５パズル</h1>
+          <button id="instruction">あそびかた</button>
         </div>
       </div>
       
@@ -34,9 +35,12 @@
           </div>
           <div id="control_pannel">
             <div id="cp_inner">
-              <button id="start">スタート</button>
-              <button id="reset">リセット</button>
+              <div id="control_main">
+                <button id="start">はじめ</button>
+                <button id="reset">やりなおし</button>
+              </div>
               <!-- No16の置き場を設ける -->
+              <div id="storage"></div>
     
             </div>
           </div>
@@ -87,6 +91,14 @@
 
 
     ///////////////////////////////////////////////////////
+    // あそびかたボタンを押下した時の動作
+    ///////////////////////////////////////////////////////
+    document.querySelector('#instruction').onclick=function() {
+      // 説明ウインドウの表示
+      window.open( "instruction.html" , "_blank", "menubar=0,width=350,height=230,top=100,left=100,menubar=0,toolbar=0,location=0,status=0, resizable=0");
+    }
+
+    ///////////////////////////////////////////////////////
     // リセットボタンを押下した時の動作
     ///////////////////////////////////////////////////////
     document.querySelector('#reset').onclick=function() {
@@ -135,7 +147,8 @@
     }
 
     // １６の置き場
-    $('#cp_inner').append('<div class="tile" id="waiting"></div>');
+    // $('#cp_inner').append('<div class="tile" id="waiting"></div>');
+    $('#storage').append('<div class="tile" id="waiting"></div>');
         document.getElementById('no'+i).style.width = '24%';
         document.getElementById('no'+i).style.height = '24%';
         document.getElementById('no'+i).style.border = '1px solid darkgray';
