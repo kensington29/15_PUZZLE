@@ -38,6 +38,9 @@
               <div id="control_main">
                 <button id="start">はじめ</button>
                 <button id="reset">やりなおし</button>
+
+              <button id="store">ちゅうだん</button>
+              <button id="restart">さいかい</button>
               </div>
               <!-- No16の置き場を設ける -->
               <div id="storage"></div>
@@ -62,6 +65,7 @@
     var num_tile = 16;
     var tile=[];
     var tile={"no1":{"no":1,"image":'img/タイル1.jpg'}} ;
+    let tile_lineup=[];
     // var tile={"no1":{"no":1,"image":' src="img/タイル1.jpg"'}} ;
     for (var i = 1; i < num_tile; i++ ){
       var str_index = "no" + (i+1);
@@ -69,7 +73,6 @@
       // var str_src = ' src="img/タイル' + (i+1) + '.jpg"';
       tile[str_index]={"no":(i+1),"image":str_src}
     }
-    console.log(tile) ;
 
     ///////////////////////////////////////////////////////
     // ウインドウを開いた時の動作
@@ -84,7 +87,6 @@
         document.getElementById('no'+i).style.border = '1px solid darkgray';
         var str_index = '<img id="tile'+i+'" src="'+tile["no"+i].image+'" width="100%" draggable="false" ondragstart="f_dragstart(event)">' ;
         $('#sl_inner #no'+i).append(str_index);
-        console.log(str_index);
       }
 
     })
@@ -162,7 +164,59 @@
 
     }
 
-  
+   
+    ///////////////////////////////////////////////////////
+    // 保存ボタンを押下した時の動作
+    ///////////////////////////////////////////////////////
+    document.querySelector('#store').onclick=function() {
+      localStorage.setItem("pzl_lineup",JSON.stringify(tile_lineup));
+    }
+
+    ///////////////////////////////////////////////////////
+    // 再開ボタンを押下した時の動作
+    ///////////////////////////////////////////////////////
+    document.querySelector('#restart').onclick=function() {
+      let str_tile_lineup=localStorage.getItem("pzl_lineup");
+      str_tile_lineup=JSON.parse(str_tile_lineup);
+      for (i =0; i <num_tile; i++){
+        tile_lineup[i]=parseInt(str_tile_lineup[i]);
+      }
+      
+      for( i = 1; i < num_tile+1; i++){
+        $('#tile'+(i)).remove();
+        var str_index = '<img id="tile'+i+'" src="'+tile["no"+i].image+'" width="100%" draggable="false" ondragstart="f_dragstart(event)">' ;
+        $('#sl_inner #no'+i).append(str_index);
+      }
+
+
+
+     // タイルを初期状態に配置する
+     for(var i=0; i < num_tile; i++) {
+      //  imgのid (tile1 - tile16)
+      var img_id = "tile" + (i+1);
+       
+      if(tile_lineup[i] > 0){
+      // 配置するタイルの画像の場所 (tile["no?"].image),no1-no16
+      // tile_lineup[i]:配置するタイル番号(1-16),iは0-15
+      var tile_src = tile["no"+tile_lineup[i]].image;
+        // i:スロット番号　tile_lineup[i]:タイル番号
+        set_tile(img_id, tile_src);
+      }else{
+        // タイルを配置しないスロットはimgを削除
+        $('#tile'+(i+1)).remove();
+        // 空欄のスロット（tile_lineupのindex)を記憶
+        var blank_slot = i;
+      }
+    }
+
+      // 空白周辺のタイルをドラッグ可能にする
+      // console.log(blank_slot);
+      enable_drag(blank_slot);
+
+
+    }
+
+
 
     ///////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////
